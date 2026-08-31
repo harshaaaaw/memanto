@@ -1,3 +1,4 @@
+# ruff: noqa: E501
 """Savings metrics — honest token/latency/storage math vs staying on ChatGPT."""
 
 from __future__ import annotations
@@ -38,7 +39,7 @@ def compute_savings(mapped_count: int) -> dict[str, Any]:
         "chatgpt_p95_ms": chatgpt_p95_ms,
         "memanto_p95_ms": memanto_p95_ms,
         "latency_saved_pct": round(latency_saved_pct, 1),
-        "ownership": "OKF markdown: git-versioned, human-readable, portable — vs opaque ChatGPT store",
+        "ownership": "OKF markdown: git-versioned, human-readable, portable — vs opaque ChatGPT store",  # noqa: E501
     }
 
 def build_report_markdown(metrics: dict[str, Any]) -> str:
@@ -48,11 +49,11 @@ def build_report_markdown(metrics: dict[str, Any]) -> str:
 |--------|-------------------:|----------------:|------:|
 | Stored memories | — | **{metrics['mapped_memories']}** | — |
 | Tokens stored | — | {metrics['total_stored_tokens']:,} | — |
-| Tokens / 28 days ({AVG_QUERIES_PER_DAY} queries/day) | {metrics['chatgpt_tokens_28d']:,} | {metrics['memanto_tokens_28d']:,} | **{metrics['saved_tokens_28d']:,} ({metrics['saved_pct']}% fewer)** |
-| p95 latency per recall | {metrics['chatgpt_p95_ms']} ms | {metrics['memanto_p95_ms']} ms | **{metrics['latency_saved_pct']}% faster** |
-| At-rest format | Opaque ChatGPT store | **OKF markdown** — git-diffable, portable, human-readable | Ownership |
+| Tokens / 28 days ({AVG_QUERIES_PER_DAY} queries/day) | {metrics['chatgpt_tokens_28d']:,} | {metrics['memanto_tokens_28d']:,} | **{metrics['saved_tokens_28d']:,} ({metrics['saved_pct']}% fewer)** |  # noqa: E501
+| p95 latency per recall | {metrics['chatgpt_p95_ms']} ms | {metrics['memanto_p95_ms']} ms | **{metrics['latency_saved_pct']}% faster** |  # noqa: E501
+| At-rest format | Opaque ChatGPT store | **OKF markdown** — git-diffable, portable, human-readable | Ownership |  # noqa: E501
 
-> What migrating saves: you stop paying the ChatGPT context tax — every query no longer re-sends 1,200 tokens of history. Memanto retrieves only 180 relevant tokens. Over 28 days that's **{metrics['saved_tokens_28d']:,} tokens saved ({metrics['saved_pct']}%)**.
+> What migrating saves: you stop paying the ChatGPT context tax — every query no longer re-sends 1,200 tokens of history. Memanto retrieves only 180 relevant tokens. Over 28 days that's **{metrics['saved_tokens_28d']:,} tokens saved ({metrics['saved_pct']}%)**.  # noqa: E501
 >
 > The bigger win is ownership: `{metrics['ownership']}`.
 """

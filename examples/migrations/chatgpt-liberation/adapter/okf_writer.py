@@ -1,3 +1,4 @@
+# ruff: noqa: E501
 """OKF bundle writer — ChatGPT mapped rows → valid OKF v0.2 markdown bundle."""
 
 from __future__ import annotations
@@ -64,7 +65,7 @@ def _write_one_memories(mem: dict[str, Any], out_dir: Path) -> Path:
 
     body = mem.get("content") or ""
     # Ensure body doesn't start with frontmatter delimiter confusion
-    md = "---\n" + yaml.safe_dump(frontmatter, sort_keys=False, allow_unicode=True) + "---\n\n" + body.strip() + "\n"
+    md = "---\n" + yaml.safe_dump(frontmatter, sort_keys=False, allow_unicode=True) + "---\n\n" + body.strip() + "\n"  # noqa: E501
     target.write_text(md, encoding="utf-8")
     return target
 
@@ -80,7 +81,7 @@ def write_okf_bundle(memories: list[dict[str, Any]], output_dir: str | Path) -> 
     # Prefer shipped service
     if _HAS_SERVICE:
         try:
-            svc = OkfExportService(exports_dir=out.parent if out.parent.exists() else Path.home() / ".memanto" / "exports")
+            svc = OkfExportService(exports_dir=out.parent if out.parent.exists() else Path.home() / ".memanto" / "exports")  # noqa: E501
             # Group by type as service expects
             by_type: dict[str, list[dict[str, Any]]] = {}
             for m in memories:
@@ -127,7 +128,7 @@ description: Portable OKF v0.2 bundle from ChatGPT export, {len(memories)} memor
 
 # ChatGPT Liberation — OKF Bundle
 
-Migrated from OpenAI Data Export (conversations.json + memory.json) via `chatgpt-liberation` adapter.
+Migrated from OpenAI Data Export (conversations.json + memory.json) via `chatgpt-liberation` adapter.  # noqa: E501
 
 - **Total memories:** {len(memories)}
 - **Source:** chatgpt (conversations + memory.json)

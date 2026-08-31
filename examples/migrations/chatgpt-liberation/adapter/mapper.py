@@ -24,13 +24,34 @@ _MAX_FOOTER_CHARS = 800
 # Classification heuristics — cheap, deterministic, no LLM needed for mapping.
 # Goal: map ChatGPT conversation artifacts onto Memanto's 13 typed primitives.
 
-_PREF_RE = re.compile(r"\b(prefer|like|love|hate|dislike|favorite|favourite|want|need|always|never)\b", re.I)
-_GOAL_RE = re.compile(r"\b(goal|plan to|want to|trying to|aim to|objective|target|deadline|ship|launch|build)\b", re.I)
-_DECISION_RE = re.compile(r"\b(decided|decision|chose|chosen|going with|selected|option)\b", re.I)
-_INSTRUCT_RE = re.compile(r"\b(remember|don't forget|always|never|from now on|please|instruction|remind me)\b", re.I)
-_REL_RE = re.compile(r"\b(my (wife|husband|partner|team|colleague|manager|friend|mom|dad)|with @|and @)\b", re.I)
-_EVENT_RE = re.compile(r"\b(yesterday|today|tomorrow|on \d{4}-\d{2}-\d{2}|meeting|call|deadline|trip|flight|appointment)\b", re.I)
-_COMMIT_RE = re.compile(r"\b(will |promise|commit|todo|task|ship by|deliver|finish by)\b", re.I)
+_PREF_RE = re.compile(
+    r"\b(prefer|like|love|hate|dislike|favorite|favourite|want|need|always|never)\b",
+    re.I,
+)
+_GOAL_RE = re.compile(
+    r"\b(goal|plan to|want to|trying to|aim to|objective|target|deadline|ship|launch|build)\b",
+    re.I,
+)
+_DECISION_RE = re.compile(
+    r"\b(decided|decision|chose|chosen|going with|selected|option)\b", re.I
+)
+_INSTRUCT_RE = re.compile(
+    r"\b(remember|don't forget|always|never|from now on|please|instruction|remind me)\b",
+    re.I,
+)
+_REL_RE = re.compile(
+    r"\b(my (wife|husband|partner|team|colleague|manager|friend|mom|dad)"
+    r"|with @|and @)\b",
+    re.I,
+)
+_EVENT_RE = re.compile(
+    r"\b(yesterday|today|tomorrow|on \d{4}-\d{2}-\d{2}|meeting|call|deadline"
+    r"|trip|flight|appointment)\b",
+    re.I,
+)
+_COMMIT_RE = re.compile(
+    r"\b(will |promise|commit|todo|task|ship by|deliver|finish by)\b", re.I
+)
 _QUESTION_RE = re.compile(r"\?\s*$")
 
 def _title_from(content: str) -> str:
@@ -78,7 +99,7 @@ def classify(text: str, role: str = "user") -> str | None:
         return "observation"
     # user messages — order matters: most specific first
     # instruction only when user explicitly says remember/from now on at start or with imperative
-    if ("from now on" in t or t.startswith("remember") or t.startswith("don't forget")) and _INSTRUCT_RE.search(t):
+    if ("from now on" in t or t.startswith("remember") or t.startswith("don't forget")) and _INSTRUCT_RE.search(t):  # noqa: E501
         return "instruction"
     if _DECISION_RE.search(t):
         return "decision"
@@ -170,7 +191,7 @@ def map_chatgpt(export: dict[str, Any]) -> list[dict[str, Any]]:
             "title": _title_from(raw)[:_MAX_TITLE_CHARS],
             "content": _truncate_content(raw, footer),
             "type": mtype,
-            "tags": ["chatgpt", "memory.json"] + ([str(mem.get("category")).lower()] if mem.get("category") else []),
+            "tags": ["chatgpt", "memory.json"] + ([str(mem.get("category")).lower()] if mem.get("category") else []),  # noqa: E501
             "confidence": _confidence_for(raw, mtype),
             "source": "chatgpt",
             "source_ref": mem_id,
@@ -179,7 +200,8 @@ def map_chatgpt(export: dict[str, Any]) -> list[dict[str, Any]]:
             "updated_at": datetime.now(timezone.utc),
         })
 
-    # 2) Conversation messages — ONLY user messages are memories; assistant replies are not migrated (they're responses, not stored memory).
+    # 2) Conversation messages — ONLY user messages are memories;  # noqa: E501
+    # assistant replies are responses, not stored memory.  # noqa: E501
     for msg in messages:
         role = msg.get("role") or "user"
         if role != "user":
@@ -212,7 +234,7 @@ def map_chatgpt(export: dict[str, Any]) -> list[dict[str, Any]]:
         content = _truncate_content(text, footer)
 
         # ephemeral tag for conversation source
-        tags = ["chatgpt", f"conv:{str(msg.get('conversation_title') or 'untitled')[:20].lower().replace(' ', '-') }"]
+        tags = ["chatgpt", f"conv:{str(msg.get('conversation_title') or 'untitled')[:20].lower().replace(' ', '-') }"]  # noqa: E501
         # add contradiction marker for evolving preference (detected via keyword)
         if "coffee" in text.lower() and "tea" in text.lower():
             tags.append("contradiction-resolved")
@@ -230,9 +252,9 @@ def map_chatgpt(export: dict[str, Any]) -> list[dict[str, Any]]:
             "updated_at": datetime.now(timezone.utc),
         })
 
-    # 3) Contradiction resolution: if same subject has evolving preference, keep latest only with marker
+    # 3) Contradiction: evolving preference — keep latest with marker  # noqa: E501
     # Simple: detect coffee->tea evolution, keep the last tea preference, tag earlier as superseded
-    # For demo fidelity: mark resolved and ensure not to double-count contradictory facts as separate goals
+    # For demo: mark resolved, don't double-count facts as goals  # noqa: E501
     # This surfaces the "resolved contradictions" narrative the bounty wants.
 
     # Already handled via dedupe + tag; no hard drop needed — we keep the trail as separate memories
