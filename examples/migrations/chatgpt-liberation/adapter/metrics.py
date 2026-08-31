@@ -43,6 +43,7 @@ def compute_savings(mapped_count: int) -> dict[str, Any]:
     }
 
 def build_report_markdown(metrics: dict[str, Any]) -> str:
+    """Build report markdown."""
     return f"""## Savings report — ChatGPT memory vs Memanto
 
 | Metric | ChatGPT (baseline) | Memanto (after) | Saved |

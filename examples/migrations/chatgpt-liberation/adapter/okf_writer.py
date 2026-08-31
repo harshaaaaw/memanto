@@ -22,11 +22,13 @@ except Exception:
 ENTRY_DELIMITER = "<!-- okf-entry -->"
 
 def _slug(text: str, max_len: int = 60) -> str:
+    """Slug."""
     text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode()
     text = re.sub(r"[^a-zA-Z0-9]+", "-", text.lower()).strip("-")
     return text[:max_len].rstrip("-") or "untitled"
 
 def _write_one_memories(mem: dict[str, Any], out_dir: Path) -> Path:
+    """Write one memories."""
     mtype = (mem.get("type") or "fact").lower()
     # group under memories/<type>/
     type_dir = out_dir / "memories" / mtype

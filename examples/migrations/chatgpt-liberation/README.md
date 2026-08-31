@@ -6,7 +6,7 @@ Alex used ChatGPT for four weeks. It picked up the small stuff: he likes bullets
 
 This turns that zip into markdown he can read, diff, and carry.
 
-### Walkthrough — live, no mock
+## Walkthrough — live, no mock
 
 No synthetic output. These are the real commands and what they print on this machine.
 
@@ -42,7 +42,7 @@ Every step writes real files. No API key needed. Add your own export:
 python scripts/run_migration.py --source ~/Downloads/chatgpt-export.zip --okf-out ./my-bundle
 ```
 
-### What it leaves behind
+## What it leaves behind
 
 43 memories. All 13 Memanto types covered (fact 11, preference 6, goal 5, instruction 4, and the rest). Zero skipped. The OKF bundle at `sample-data/okf-bundle/memories/<type>/<slug>.md` reloads 43/43 through the shipped `okf_loader`. Ten questions asked before and after give the same answer.
 
@@ -50,7 +50,7 @@ The honest saving comes from not resending history. ChatGPT sends about 1,200 to
 
 Open `okf-viewer.html` in a browser. Filter by type, search for coffee, see the gold edge where the trail resolved from coffee to water.
 
-### How it fits the shipped CLI
+## How it fits the shipped CLI
 
 It feeds it, it does not replace it.
 
@@ -58,13 +58,13 @@ It feeds it, it does not replace it.
 - `adapter/mapper.py` has `map_chatgpt` and `MAPPERS["chatgpt"]` matching the same contract as `mem0` and `letta`.
 - `adapter/okf_writer.py` calls `OkfExportService` first, falls back only if needed. So `memanto migrate okf ./bundle --dry-run` works exactly as documented.
 
-### Video
+## Video
 
 `docs/demo.mp4` is the real screen recording of the walkthrough above (21MB, no generated terminal). The same four commands, same cursor, same pause while the loader checks 43/43.
 
-### Reproduce
+## Reproduce
 
-```
+```text
 chatgpt-liberation/
   adapter/   parser, mapper, okf_writer, metrics
   sample-data/  conversations.json, memory.json, chatgpt-export.zip, okf-bundle/

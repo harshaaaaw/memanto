@@ -1,3 +1,4 @@
+# ruff: noqa: E501
 #!/usr/bin/env python3
 """Golden Q&A round-trip validation — 10 questions before/after parity."""
 
@@ -50,6 +51,7 @@ def judge(expected: str, retrieved: str) -> bool:
 
 
 def main() -> int:
+    """Validate roundtrip."""
     bundle = ROOT / "sample-data" / "okf-bundle"
     print(f"Validating against bundle: {bundle}")
     passed = 0

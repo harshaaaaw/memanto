@@ -1,3 +1,4 @@
+# ruff: noqa: E501, E402
 """Deterministic lived-in ChatGPT export generator — 28 days, contradictions, evolving prefs."""
 
 from __future__ import annotations
@@ -135,6 +136,7 @@ for i, title in enumerate(EXTRA_TITLES):
 assert len(CONVERSATIONS_SPEC) == 38
 
 def build_conversations() -> list[dict[str, Any]]:
+    """Build conversations."""
     out = []
     for idx, spec in enumerate(CONVERSATIONS_SPEC):
         cid = f"conv-{idx:03d}-{hashlib.sha256(spec['title'].encode()).hexdigest()[:8]}"
@@ -169,6 +171,7 @@ def build_conversations() -> list[dict[str, Any]]:
     return out
 
 def build_memory_json() -> list[dict[str, Any]]:
+    """Build memory json."""
     # explicit ChatGPT memory.json style — 5 curated memories spanning weeks
     return [
         {"id": "mem-001", "memory": "User prefers concise, bulleted summaries.", "type": "preference", "created_at": (BASE + timedelta(days=0)).isoformat()},
@@ -179,6 +182,7 @@ def build_memory_json() -> list[dict[str, Any]]:
     ]
 
 def write_sample_archive(output_dir: str | Path) -> dict[str, Any]:
+    """Write sample archive."""
     out = Path(output_dir)
     out.mkdir(parents=True, exist_ok=True)
     conversations = build_conversations()

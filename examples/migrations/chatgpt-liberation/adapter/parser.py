@@ -10,6 +10,7 @@ from typing import Any
 
 
 def _parse_dt(value: Any) -> datetime | None:
+    """Parse dt."""
     if value in (None, "", 0):
         return None
     if isinstance(value, (int, float)) and not isinstance(value, bool):
@@ -34,6 +35,7 @@ def _parse_dt(value: Any) -> datetime | None:
 
 
 def _load_json_from_zip(zpath: Path, name: str) -> Any | None:
+    """Load json from zip."""
     try:
         with zipfile.ZipFile(zpath, "r") as zf:
             # handle nested path inside zip
@@ -46,6 +48,7 @@ def _load_json_from_zip(zpath: Path, name: str) -> Any | None:
 
 
 def _load_json_file(path: Path) -> Any | None:
+    """Load json file."""
     try:
         return json.loads(path.read_text(encoding="utf-8"))
     except (json.JSONDecodeError, OSError):

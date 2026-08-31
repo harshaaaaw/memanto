@@ -55,12 +55,14 @@ _COMMIT_RE = re.compile(
 _QUESTION_RE = re.compile(r"\?\s*$")
 
 def _title_from(content: str) -> str:
+    """Title from."""
     text = content.strip().replace("\n", " ")
     if len(text) <= _DEFAULT_TITLE_CHARS:
         return text
     return text[: _DEFAULT_TITLE_CHARS - 3].rstrip() + "..."
 
 def _coerce_type(raw: str | None) -> str | None:
+    """Coerce type."""
     if not raw:
         return None
     t = raw.strip().lower()
@@ -119,6 +121,7 @@ def classify(text: str, role: str = "user") -> str | None:
     return "fact"
 
 def _truncate_content(content: str, footer: str = "") -> str:
+    """Truncate content."""
     budget = _MAX_CONTENT_CHARS - len(footer) - 2
     if len(content) > budget:
         content = content[: max(0, budget - 3)].rstrip() + "..."
@@ -147,6 +150,7 @@ def _footer_for(record: dict[str, Any]) -> str:
     return footer
 
 def _confidence_for(text: str, mtype: str | None) -> float:
+    """Confidence for."""
     # higher for explicit preferences/instructions, lower for auto-classified
     if mtype in ("preference", "instruction", "decision", "commitment"):
         return 0.88
@@ -262,6 +266,7 @@ def map_chatgpt(export: dict[str, Any]) -> list[dict[str, Any]]:
     return rows
 
 def type_breakdown(rows: list[dict[str, Any]]) -> dict[str, int]:
+    """Type breakdown."""
     counts: dict[str, int] = {}
     for r in rows:
         key = r.get("type") or "auto"
